@@ -11,6 +11,6 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useLogger(app.get(Logger));
 
-  await app.listen(configService.get('AUTH_PORT'));
+  await app.listen(configService.get('VEHICLE_PORT'));
 }
 bootstrap();
