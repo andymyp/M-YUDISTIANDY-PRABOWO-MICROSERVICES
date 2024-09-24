@@ -3,6 +3,7 @@ import { VehiclesService } from './vehicles.service';
 import { VehiclesController } from './vehicles.controller';
 import { DatabaseModule, LoggerModule } from '@app/common';
 import { Vehicle, VehicleSchema } from './entities/vehicle.entity';
+import { VehiclesRepository } from './vehicles.repository';
 
 @Module({
   imports: [
@@ -11,6 +12,6 @@ import { Vehicle, VehicleSchema } from './entities/vehicle.entity';
     LoggerModule,
   ],
   controllers: [VehiclesController],
-  providers: [VehiclesService],
+  providers: [VehiclesService, VehiclesRepository],
 })
 export class VehiclesModule {}
