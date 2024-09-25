@@ -56,4 +56,12 @@ export class UsersService {
   async getUserByEmail(emailAddress: string) {
     return this.usersRepository.findOne({ emailAddress });
   }
+
+  async getUserByAccountNumber(accountNumber: string) {
+    return this.usersRepository.findOne({ accountNumber });
+  }
+
+  async getUserByIdentityNumber(identityNumber: string) {
+    return this.usersRepository.findOne({ identityNumber });
+  }
 }
