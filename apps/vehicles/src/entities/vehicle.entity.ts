@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { AbstractDocument } from '@app/common';
+import mongoose from 'mongoose';
+import { User } from 'apps/auth/src/users/entities/user.entity';
 
 @Schema({ timestamps: true, versionKey: false })
 export class Vehicle extends AbstractDocument {
@@ -14,6 +16,13 @@ export class Vehicle extends AbstractDocument {
 
   @Prop({ type: String, required: true })
   color: string;
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  })
+  userId: User;
 }
 
 export const VehicleSchema = SchemaFactory.createForClass(Vehicle);

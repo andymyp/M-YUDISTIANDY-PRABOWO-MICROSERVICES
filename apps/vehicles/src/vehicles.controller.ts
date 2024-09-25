@@ -11,7 +11,8 @@ import {
 import { VehiclesService } from './vehicles.service';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
-import { JwtAuthGuard } from '@app/common';
+import { CurrentUser, JwtAuthGuard } from '@app/common';
+import { User } from 'apps/auth/src/users/entities/user.entity';
 
 @Controller('vehicles')
 export class VehiclesController {
@@ -19,8 +20,11 @@ export class VehiclesController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  create(@Body() createVehicleDto: CreateVehicleDto) {
-    return this.vehiclesService.create(createVehicleDto);
+  create(
+    @CurrentUser() user: User,
+    @Body() createVehicleDto: CreateVehicleDto,
+  ) {
+    return this.vehiclesService.create(user, createVehicleDto);
   }
 
   @Get()
