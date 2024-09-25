@@ -1,10 +1,8 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UsersService } from './users/users.service';
 import { LoginUserDTO } from './users/dto/login-user.dto';
 import { CreateUserDTO } from './users/dto/create-user.dto';
-import { MessagePattern, Payload } from '@nestjs/microservices';
-import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -21,11 +19,5 @@ export class AuthController {
   @Post('register')
   async register(@Body() createUserDto: CreateUserDTO) {
     return this.userService.create(createUserDto);
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @MessagePattern('authenticate')
-  async authenticate(@Payload() data: any) {
-    return data.user;
   }
 }

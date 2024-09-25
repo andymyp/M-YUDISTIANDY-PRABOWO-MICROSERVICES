@@ -6,12 +6,14 @@ import { Vehicle, VehicleSchema } from './entities/vehicle.entity';
 import { VehiclesRepository } from './vehicles.repository';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     DatabaseModule,
     DatabaseModule.forFeature([{ name: Vehicle.name, schema: VehicleSchema }]),
     LoggerModule,
+    JwtModule,
     ClientsModule.registerAsync([
       {
         name: AUTH_SERVICE,
