@@ -2,14 +2,18 @@ import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 import { VehiclesRepository } from './vehicles.repository';
+import { User } from 'apps/auth/src/users/entities/user.entity';
 
 @Injectable()
 export class VehiclesService {
   constructor(private readonly vehiclesRepository: VehiclesRepository) {}
 
-  async create(createVehicleDto: CreateVehicleDto) {
+  async create(user: User, createVehicleDto: CreateVehicleDto) {
     await this.validateRegistrationNumber(createVehicleDto);
-    return this.vehiclesRepository.create(createVehicleDto);
+    return this.vehiclesRepository.create({
+      ...createVehicleDto,
+      userId: user,
+    });
   }
 
   async findAll() {
