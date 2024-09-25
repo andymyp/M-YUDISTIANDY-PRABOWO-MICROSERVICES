@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  auth:
+    build:
+      context: .
+      args:
+        APP: auth
+      target: development
+    command: npm run start:dev auth
+    env_file:
+      - .env
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - mongo
+
+  vehicles:
+    build:
+      context: .
+      args:
+        APP: vehicles
+      target: development
+    command: npm run start:dev vehicles
+    env_file:
+      - .env
+    ports:
+      - '3001:3001'
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - mongo
+      - redis
+
+  mongo:
+    image: mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    image: redis:alpine
+    ports:
+      - '6379:6379'
+
+volumes:
+  mongo_data:
