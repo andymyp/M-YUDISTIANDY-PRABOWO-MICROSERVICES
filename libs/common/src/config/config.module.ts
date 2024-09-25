@@ -12,9 +12,15 @@ import * as Joi from 'joi';
       validationSchema: Joi.object({
         AUTH_PORT: Joi.number().required(),
         AUTH_TCP_PORT: Joi.number().required(),
+
         VEHICLE_PORT: Joi.number().required(),
         VEHICLE_TCP_PORT: Joi.number().required(),
+
         MONGODB_URI: Joi.string().required(),
+
+        REDIS_HOST: Joi.string().required(),
+        REDIS_PORT: Joi.number().required(),
+
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRATION: Joi.string().required(),
       }),
