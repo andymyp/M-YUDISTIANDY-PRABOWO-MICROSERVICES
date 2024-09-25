@@ -1,4 +1,4 @@
 export interface JwtPayload {
-  identityNumber: string;
+  emailAddress: string;
   iat?: Date;
 }

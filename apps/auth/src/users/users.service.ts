@@ -14,7 +14,7 @@ export class UsersService {
     });
   }
 
-  async getUserByIdentityNumber(identityNumber: string) {
-    return this.usersRepository.findOne({ identityNumber });
+  async getUserByEmail(emailAddress: string) {
+    return this.usersRepository.findOne({ emailAddress });
   }
 }
