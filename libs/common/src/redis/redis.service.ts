@@ -12,7 +12,7 @@ export class RedisService {
     try {
       return JSON.parse(await this.cacheManager.get(key));
     } catch (e) {
-      console.log({ e });
+      this.logger.warn(e.message);
     }
   }
 
@@ -20,7 +20,7 @@ export class RedisService {
     try {
       return await this.cacheManager.set(key, value);
     } catch (e) {
-      console.log(e);
+      this.logger.warn(e.message);
     }
   }
 
@@ -28,7 +28,7 @@ export class RedisService {
     try {
       return await this.cacheManager.del(key);
     } catch (e) {
-      console.log(e);
+      this.logger.warn(e.message);
     }
   }
 }
