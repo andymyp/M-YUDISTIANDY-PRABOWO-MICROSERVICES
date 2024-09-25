@@ -11,7 +11,9 @@ import * as Joi from 'joi';
       isGlobal: true,
       validationSchema: Joi.object({
         AUTH_PORT: Joi.number().required(),
+        AUTH_TCP_PORT: Joi.number().required(),
         VEHICLE_PORT: Joi.number().required(),
+        VEHICLE_TCP_PORT: Joi.number().required(),
         MONGODB_URI: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRATION: Joi.string().required(),
