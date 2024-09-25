@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 import { VehiclesRepository } from './vehicles.repository';
@@ -8,6 +8,7 @@ export class VehiclesService {
   constructor(private readonly vehiclesRepository: VehiclesRepository) {}
 
   async create(createVehicleDto: CreateVehicleDto) {
+    await this.validateRegistrationNumber(createVehicleDto);
     return this.vehiclesRepository.create(createVehicleDto);
   }
 
@@ -28,5 +29,17 @@ export class VehiclesService {
 
   async remove(_id: string) {
     return this.vehiclesRepository.findOneAndDelete({ _id });
+  }
+
+  async validateRegistrationNumber(createVehicleDto: CreateVehicleDto) {
+    try {
+      await this.vehiclesRepository.findOne({
+        registrationNumber: createVehicleDto.registrationNumber,
+      });
+    } catch (error) {
+      return;
+    }
+
+    throw new UnprocessableEntityException('registrationNumber already exists');
   }
 }
