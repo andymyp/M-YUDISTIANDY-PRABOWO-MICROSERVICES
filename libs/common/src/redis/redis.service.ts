@@ -18,7 +18,7 @@ export class RedisService {
 
   async set(key: string, value: any): Promise<void> {
     try {
-      return await this.cacheManager.set(key, value);
+      return await this.cacheManager.set(key, JSON.stringify(value));
     } catch (e) {
       this.logger.warn(e.message);
     }

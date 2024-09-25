@@ -3,17 +3,31 @@ import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 import { VehiclesRepository } from './vehicles.repository';
 import { User } from 'apps/auth/src/users/entities/user.entity';
+import { RedisService } from '@app/common';
 
 @Injectable()
 export class VehiclesService {
-  constructor(private readonly vehiclesRepository: VehiclesRepository) {}
+  private readonly CACHE_KEY = 'vehicle_';
+
+  constructor(
+    private readonly vehiclesRepository: VehiclesRepository,
+    private readonly redisService: RedisService,
+  ) {}
 
   async create(user: User, createVehicleDto: CreateVehicleDto) {
     await this.validateRegistrationNumber(createVehicleDto);
-    return this.vehiclesRepository.create({
+
+    const newVehicle = await this.vehiclesRepository.create({
       ...createVehicleDto,
       userId: user,
     });
+
+    await this.redisService.set(
+      `${this.CACHE_KEY}${newVehicle._id}`,
+      newVehicle,
+    );
+
+    return newVehicle;
   }
 
   async findAll() {
@@ -21,18 +35,40 @@ export class VehiclesService {
   }
 
   async findOne(_id: string) {
-    return this.vehiclesRepository.findOne({ _id });
+    const cachedVehicle = await this.redisService.get(
+      `${this.CACHE_KEY}${_id}`,
+    );
+
+    if (cachedVehicle) {
+      return cachedVehicle;
+    }
+
+    const vehicle = await this.vehiclesRepository.findOne({ _id });
+
+    if (vehicle) {
+      await this.redisService.set(`${this.CACHE_KEY}${_id}`, vehicle);
+    }
+
+    return vehicle;
   }
 
   async update(_id: string, updateVehicleDto: UpdateVehicleDto) {
-    return this.vehiclesRepository.findOneAndUpdate(
+    const updatedVehicle = await this.vehiclesRepository.findOneAndUpdate(
       { _id },
       { $set: updateVehicleDto },
     );
+
+    await this.redisService.set(`${this.CACHE_KEY}${_id}`, updatedVehicle);
+    return updatedVehicle;
   }
 
   async remove(_id: string) {
-    return this.vehiclesRepository.findOneAndDelete({ _id });
+    const deletedVehicle = await this.vehiclesRepository.findOneAndDelete({
+      _id,
+    });
+
+    await this.redisService.del(`${this.CACHE_KEY}${_id}`);
+    return deletedVehicle;
   }
 
   async validateRegistrationNumber(createVehicleDto: CreateVehicleDto) {

@@ -1,7 +1,12 @@
 import { Module } from '@nestjs/common';
 import { VehiclesService } from './vehicles.service';
 import { VehiclesController } from './vehicles.controller';
-import { AUTH_SERVICE, DatabaseModule, LoggerModule } from '@app/common';
+import {
+  AUTH_SERVICE,
+  DatabaseModule,
+  LoggerModule,
+  RedisModule,
+} from '@app/common';
 import { Vehicle, VehicleSchema } from './entities/vehicle.entity';
 import { VehiclesRepository } from './vehicles.repository';
 import { ClientsModule, Transport } from '@nestjs/microservices';
@@ -14,6 +19,7 @@ import { JwtModule } from '@nestjs/jwt';
     DatabaseModule.forFeature([{ name: Vehicle.name, schema: VehicleSchema }]),
     LoggerModule,
     JwtModule,
+    RedisModule,
     ClientsModule.registerAsync([
       {
         name: AUTH_SERVICE,
